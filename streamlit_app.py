@@ -1,6 +1,18 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Constants & Config
 # ─────────────────────────────────────────────────────────────────────────────
+import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib
+import pickle
+import shap
+import lime
+from lime.lime_tabular import LimeTabularExplainer
+import plotly.express as px
+import plotly.graph_objects as go
+from sklearn.metrics import mean_squared_error, r2_score
+
 FARMER_FEATURES = [
     "Nitrogen Applied (kg/ha)",       # COLUMN: N_kg_ha renamed
     "Phosphorus Applied (kg/ha)",     # COLUMN: P_kg_ha renamed
@@ -58,26 +70,26 @@ def load_all_artefacts():
     """
     artefacts = {}
     try:
-        artefacts["model"]         = joblib.load("models/xgb_model.pkl")
-        artefacts["scaler"]        = joblib.load("models/scaler.pkl")
-        artefacts["feature_names"] = joblib.load("models/feature_names.pkl")
-        artefacts["metrics"]       = joblib.load("models/metrics.pkl")
+        artefacts["model"]         = joblib.load("xgb_model.pkl")
+        artefacts["scaler"]        = joblib.load("scaler.pkl")
+        artefacts["feature_names"] = joblib.load("feature_names.pkl")
+        artefacts["metrics"]       = joblib.load("metrics.pkl")
     except FileNotFoundError as e:
         return str(e)
 
     try:
-        with open("models/shap_explainer.pkl", "rb") as f:
+        with open("shap_explainer.pkl", "rb") as f:
             artefacts["shap_explainer"] = pickle.load(f)
     except Exception:
         # Rebuild from model if pickle fails (common across Python versions)
         artefacts["shap_explainer"] = shap.TreeExplainer(artefacts["model"])
 
     try:
-        artefacts["lime_explainer"] = joblib.load("models/lime_explainer.pkl")
+        artefacts["lime_explainer"] = joblib.load("lime_explainer.pkl")
     except Exception:
         # Rebuild LIME from training data sample
         try:
-            X_train = pd.read_csv("data/X_train.csv")
+            X_train = pd.read_csv("X_train.csv")
             artefacts["lime_explainer"] = LimeTabularExplainer(
                 training_data=X_train.values,
                 feature_names=list(X_train.columns),
@@ -88,7 +100,7 @@ def load_all_artefacts():
             artefacts["lime_explainer"] = None
 
     try:
-        artefacts["xai_metrics"] = joblib.load("models/xai_metrics.pkl")
+        artefacts["xai_metrics"] = joblib.load("xai_metrics.pkl")
     except Exception:
         artefacts["xai_metrics"] = {}
 
@@ -177,7 +189,7 @@ def predict_with_ci(model, scaler, row: pd.DataFrame) -> tuple[float, float, flo
     CI uses 2 × test RMSE as a practical uncertainty estimate.
     """
     try:
-        metrics = joblib.load("models/metrics.pkl")
+        metrics = joblib.load("metrics.pkl")
         rmse = metrics.get("test_rmse", 379.5)
     except Exception:
         rmse = 379.5
