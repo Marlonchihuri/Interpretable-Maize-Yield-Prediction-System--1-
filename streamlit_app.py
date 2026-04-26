@@ -752,7 +752,7 @@ elif page == "📋 Past Forecasts":
             return colors.get(val, "")
 
         st.dataframe(
-            hist_df.style.applymap(tier_color, subset=["Tier"]),
+            hist_df.style.map(tier_color, subset=["Tier"]),
             use_container_width=True,
             height=400,
         )
