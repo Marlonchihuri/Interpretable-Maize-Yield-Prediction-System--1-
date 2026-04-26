@@ -1,0 +1,13 @@
+🌽 Predicted yield: 5,875 kg/ha (5.88 t/ha)
+   Tier: HIGH | District average: 4,208 kg/ha
+   ▲ 1,667 kg/ha vs average
+
+📈 Yield boosters (factors increasing your yield):
+   • Total NPK (kg/ha): +1,103 kg/ha effect
+   • Nitrogen Applied (kg/ha): +928 kg/ha effect
+   • Phosphorus Applied (kg/ha): +640 kg/ha effect
+
+📉 Yield limiters (factors reducing your yield):
+   • Fert_Efficiency: -1,351 kg/ha effect
+   • Planting Density (plants/m²): -54 kg/ha effect
+     → Tip: Plant within 2 weeks of optimal planting date.
