@@ -12,6 +12,7 @@ from lime.lime_tabular import LimeTabularExplainer
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.metrics import mean_squared_error, r2_score
+import datetime
 
 FARMER_FEATURES = [
     "Nitrogen Applied (kg/ha)",       # COLUMN: N_kg_ha renamed
@@ -493,7 +494,7 @@ if page == "🔮 Predict Yield":
             format_func=str.title,
         )
         season = st.selectbox("Season", ["first season", "second season"])
-        planting_date = st.date_input("Planting Date", value=date(2024, 4, 1))
+        planting_date = st.date_input("Planting Date", value=datetime.date(2024, 4, 1))
         plant_doy = planting_date.timetuple().tm_yday   # convert to day-of-year
 
         st.markdown('<p class="section-title" style="margin-top:18px">🌾 Agronomic Inputs</p>', unsafe_allow_html=True)
